@@ -26,7 +26,7 @@ module.exports = {
     'no-restricted-imports': [
       'error',
       {
-        "patterns": [{ "regex": "^@mui/[^/]+$" }]
+        patterns: ["^@mui/[^/]+$"]
       }
     ],
     //Common(chung)
