@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",         // Bắt buộc: gốc của dự án
+    "paths": {
+      "~/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
