@@ -4,7 +4,9 @@ function BoardContent(props) {
   return (
     <Box
       sx={(theme) => ({
-        backgroundColor: 'primary.main',
+        bgcolor:(theme) => {
+          return theme.palette.mode==='dark' ? '#34495e': '#1976d2'
+        },
         width: '100%',
         height: `calc(100vh - ${theme.trello.appbarHeight} - ${theme.trello.boardbarHeight})`,
         display: 'flex',

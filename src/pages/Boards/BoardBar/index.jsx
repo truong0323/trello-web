@@ -12,13 +12,13 @@ import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 
 const MENUS_STYLE = {
-  color: 'primary.main',
-  bgcolor:'white',
+  color: 'white',
+  bgcolor:'transparent',
   border: 'none',
   paddingX:'5px',
   borderRadius: '4px',
-  '& .MuiSvgIcon-root':{
-    color: 'primary.main'
+  '.MuiSvgIcon-root':{
+    color: 'white'
   },
   '&:hover': {
     bgcolor: 'primary.50'
@@ -38,9 +38,10 @@ function BoardBar() {
         justifyContent: 'space-between',
         gap:2,
         overflowX:'auto',
-        borderTop:'1px solid #00bfa5',
-        backgroundColor: theme.palette.background.default,
-        color: theme.palette.text.primary
+        borderBottom:'1px solid white',
+        bgcolor:(theme) => {
+          return theme.palette.mode==='dark' ? '#34495e': '#1976d2'
+        }
       })}
     >
       <Box sx={{ display:'flex', alignItems: 'center', gap:2 }}>
@@ -78,16 +79,54 @@ function BoardBar() {
           
       </Box>
       <Box sx={{ display:'flex', alignItems: 'center', gap:2 }}>
-        <Button variant="outlined" startIcon={ <PersonAddIcon/> }>Invite</Button>
+        <Button 
+          variant="outlined" 
+          startIcon={ <PersonAddIcon/> }
+          sx={{color: 'white',
+            borderColor: 'white',
+            '&:hover':{borderColor: 'white'}
+          }}
+        >Invite
+        </Button>
         <AvatarGroup max={7}
         sx={{
+          gap:'10px',
           '& .MuiAvatar-root': {
             width: 34,
             height: 34,
-            fontSize: '16px'
+            fontSize: '16px',
+            border: 'none'
           }
         }}
         >
+          <Tooltip title="Lê Mạnh trường">
+            <Avatar alt="Trevor Henderson" 
+              src="/static/images/avatar/5.jpg" />
+          </Tooltip>
+          <Tooltip title="Lê Mạnh trường">
+            <Avatar alt="Trevor Henderson" 
+              src="/static/images/avatar/5.jpg" />
+          </Tooltip>
+          <Tooltip title="Lê Mạnh trường">
+            <Avatar alt="Trevor Henderson" 
+              src="/static/images/avatar/5.jpg" />
+          </Tooltip>
+          <Tooltip title="Lê Mạnh trường">
+            <Avatar alt="Trevor Henderson" 
+              src="/static/images/avatar/5.jpg" />
+          </Tooltip>
+          <Tooltip title="Lê Mạnh trường">
+            <Avatar alt="Trevor Henderson" 
+              src="/static/images/avatar/5.jpg" />
+          </Tooltip>
+          <Tooltip title="Lê Mạnh trường">
+            <Avatar alt="Trevor Henderson" 
+              src="/static/images/avatar/5.jpg" />
+          </Tooltip>
+          <Tooltip title="Lê Mạnh trường">
+            <Avatar alt="Trevor Henderson" 
+              src="/static/images/avatar/5.jpg" />
+          </Tooltip>
           <Tooltip title="Lê Mạnh trường">
             <Avatar alt="Trevor Henderson" 
               src="/static/images/avatar/5.jpg" />
