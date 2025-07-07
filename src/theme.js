@@ -1,5 +1,5 @@
-import { BorderColor, Height } from '@mui/icons-material'
-import { teal,red, deepOrange, cyan, orange } from '@mui/material/colors'
+// import { BorderColor, Height } from '@mui/icons-material'
+// import { teal,red, deepOrange, cyan, orange } from '@mui/material/colors'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
 const theme = extendTheme({
@@ -8,22 +8,7 @@ const theme = extendTheme({
 
   // ✅ Đây là cấu trúc theme mới cho dark/light
   colorSchemes: {
-    light: {
-      palette: {
-        primary: {
-          main: teal[500]
-        },
-        secondary: deepOrange
-      }
-    },
-    dark: {
-      palette: {
-        primary: {
-          main: cyan[500]
-        },
-        secondary: orange
-      }
-    }
+    light: {}, dark: {}
   },
 
   // ✅ Custom variables riêng của bạn (appbarHeight, v.v.)
@@ -40,11 +25,11 @@ const theme = extendTheme({
             height:'8px'
           },
           '*::-webkit-scrollbar-thumb': {
-            backgroundColor: '#bdc3c7',
+            backgroundColor: '#dcdde1',
             borderRadius: '8px'
           },
           '*::-webkit-scrollbar-thumb:hover': {
-            backgroundColor: '#16a085',
+            backgroundColor: 'white',
             borderRadius: '8px'
           }
         }
@@ -57,43 +42,36 @@ const theme = extendTheme({
         // Name of the slot
         root: {
           // Some CSS
-          textTransform: 'none'
+          textTransform: 'none',
+          borderWidth: '0.5px',
+          '&:hover':{
+            borderWidth: '0.5px',
+          }
         }
       }
     },
     
     MuiInputLabel:{
       styleOverrides: {
-        // Name of the slot
-        root: ({theme})=> ({
-          color: theme.palette.primary.main,
-          fontSize:'0.875rem'
-        })
+        root: { fontSize:'0.875rem' }
       }
     },
     MuiOutlinedInput:{
       styleOverrides: {
-        
-        root: ({ theme }) => {
-          return {
-            color: theme.palette.primary.main,
-            fontSize: '0.875rem',
-            '.MuiOutlinedInput-notchedOutline':{
-              borderColor: theme.palette.primary.light
-            },
-            '&:hover':{
-              '.MuiOutlinedInput-notchedOutline':{
-                borderColor: theme.palette.primary.main
-              }
-            },
-            '& fieldset':{
-              borderWidth:'1px !important' //bỏ cái nháy trên thanh search khi bấm
-            }
+        root: {
+          fontSize: '0.875rem',
+          '& fieldset':{
+            borderWidth:'0.5px !important' //bỏ cái nháy trên thanh search khi bấm
+          },
+          '&:hover fieldset':{
+            borderWidth:'2px !important' //bỏ cái nháy trên thanh search khi bấm
+          },
+          '&.Mui-focused fieldset':{
+            borderWidth:'2px !important' //bỏ cái nháy trên thanh search khi bấm
           }
         }
       }
     }
-    
 
   }
 })
