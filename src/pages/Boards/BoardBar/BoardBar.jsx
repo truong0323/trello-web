@@ -10,7 +10,7 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-
+import { capitalizeFirstLetter } from '~/utils/formatters'
 const MENUS_STYLE = {
   color: 'white',
   bgcolor:'transparent',
@@ -26,7 +26,10 @@ const MENUS_STYLE = {
 
 }
 
-function BoardBar() {
+function BoardBar({board}) {
+  // const board = props.board
+  // const{board} = props
+
   return (
     <Box px={2}
       sx={(theme) => ({
@@ -38,7 +41,7 @@ function BoardBar() {
         justifyContent: 'space-between',
         gap:2,
         overflowX:'auto',
-        borderBottom:'1px solid white',
+        
         bgcolor:(theme) => {
           return theme.palette.mode==='dark' ? '#34495e': '#1976d2'
         }
@@ -48,13 +51,13 @@ function BoardBar() {
         <Chip 
           sx={MENUS_STYLE}
           icon={<DashboardIcon/>}
-          label="truong0323 MERN stack" 
+          label={capitalizeFirstLetter(board?.title)}
           clickable
         />
         <Chip 
           sx={MENUS_STYLE}
           icon={<VpnLockIcon/>}
-          label="Public/Private Workspace" 
+          label={capitalizeFirstLetter(board?.type)}
           clickable
         />
         <Chip 
@@ -95,7 +98,12 @@ function BoardBar() {
             width: 34,
             height: 34,
             fontSize: '16px',
-            border: 'none'
+            border: 'none',
+            color: 'white',
+            cursor: 'pointer',
+            '&: first-of-type':{
+              bgcolor:'#a4b0be'
+            }
           }
         }}
         >
