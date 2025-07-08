@@ -1,7 +1,13 @@
 // import { BorderColor, Height } from '@mui/icons-material'
 // import { teal,red, deepOrange, cyan, orange } from '@mui/material/colors'
+import { ClassSharp } from '@mui/icons-material'
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 
+const APP_BAR_HEIGHT = '58px'
+const BOARD_BAR_HEIGHT = '60px'
+const BOARD_CONTENT_HEIGHT =`calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`
+const COLUMN_HEADER_HEIGHT = '50px'
+const COLUMN_FOOTER_HEIGHT = '56px'
 const theme = extendTheme({
   // ✅ Prefix cho CSS Variables (tự động tạo biến màu như `--mui-palette-primary-main`)
   cssVarPrefix: 'mui',
@@ -13,8 +19,11 @@ const theme = extendTheme({
 
   // ✅ Custom variables riêng của bạn (appbarHeight, v.v.)
   trello: {
-    appbarHeight: '58px',
-    boardbarHeight: '60px'
+    appbarHeight: APP_BAR_HEIGHT,
+    boardbarHeight: BOARD_BAR_HEIGHT,
+    boardContentHeight : BOARD_CONTENT_HEIGHT,
+    columnHeaderHeight: COLUMN_HEADER_HEIGHT,
+    columnFooterHeight:COLUMN_FOOTER_HEIGHT
   },
   components: {
     MuiCssBaseline:{
@@ -54,6 +63,13 @@ const theme = extendTheme({
     MuiInputLabel:{
       styleOverrides: {
         root: { fontSize:'0.875rem' }
+      }
+    },
+    MuiTypography:{
+      styleOverrides: {
+        root: { 
+          '&.MuiTypography-body1': '0.875rem'// 
+        }
       }
     },
     MuiOutlinedInput:{
