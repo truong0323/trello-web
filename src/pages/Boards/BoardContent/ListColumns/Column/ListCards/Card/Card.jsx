@@ -9,13 +9,33 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import CommentIcon from '@mui/icons-material/Comment'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import {useSortable} from '@dnd-kit/sortable'
+import {CSS} from '@dnd-kit/utilities'
+import { Opacity } from '@mui/icons-material'
 
 function Card({ card }) {
+  const { attributes, listeners, setNodeRef, transform, transition,isDragging} = useSortable( {
+      id: card._id,
+      data: {...card}
+    } )
+    
+    const dndKitCardStyles = {
+      // touchAction: 'none',// dành cho sessor default dạng pointer
+      transform: CSS.Translate.toString(transform),
+      transition,
+      opacity: isDragging? 0.5:undefined
+    };
+
   const shouldShowCardAction = ()=>{
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.AttachmentIcon?.length
   }
   return (
     <MuiCard
+      ref={setNodeRef}
+      style={dndKitCardStyles}
+      {...attributes}
+      {...listeners}
+
       sx={{
         cursor: 'pointer',
         overflow: 'unset',

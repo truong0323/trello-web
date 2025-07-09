@@ -12,5 +12,8 @@ export default defineConfig({
     alias: [
       { find: '~', replacement: '/src' }
     ]
+  },
+  server: {
+    host: true // hoặc '0.0.0.0'
   }
 })
