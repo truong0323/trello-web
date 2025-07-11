@@ -26,11 +26,12 @@ module.exports = {
     'no-restricted-imports': [
       'error',
       {
-        patterns: ["^@mui/[^/]+$"]
+        'patterns': ['@mui/*/*/*']
       }
     ],
     //Common(chung)
     'no-console': 1,
+    'no-extra-boolean-cast': 0,
     'no-lonely-if': 1,
     'no-unused-vars': 1,
     'no-trailing-spaces': 1,
