@@ -22,8 +22,8 @@ import {
 
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { cloneDeep } from 'lodash'
-
+import { cloneDeep, isEmpty} from 'lodash'
+import {generatePlaceholderCard} from '~/utils/formatters'
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
@@ -91,6 +91,14 @@ function BoardContent({ board }) {
       if (nextActiveColumn) {
         //Xóa Card ở các column active(cũng có thể hiểu là column cũ ,cái lúc mà kéo card ra khỏi nó để sang column khác)
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+        
+        //Thêm placeholder Card nếu Column rỗng :bị kéo hết card đi ,không còn cái nào nữa (video 37.2)
+        if(isEmpty(nextActiveColumn.cards)){
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+        }
+        //xóa placeholder đi nếu card đang tồn tại(video 37.2)
+        nextActiveColumn.cards = nextActiveColumn.cards.filter(card => !card.FE_PlaceholderCard)
+        
         //cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
       }
