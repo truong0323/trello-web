@@ -40,7 +40,9 @@ function Card({ card }) {
       sx={{
         cursor: 'pointer',
         overflow: 'unset',
-        boxShadow: '0 1px 1px rgba(0,0,0,0.2)'
+        boxShadow: '0 1px 1px rgba(0,0,0,0.2)',
+        opacity: card?.FE_Placeholder ? '0' : '1'
+      
       }}
     >
       {card?.cover&&
