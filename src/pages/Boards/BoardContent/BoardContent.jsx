@@ -6,8 +6,8 @@ import Card from './ListColumns/Column/ListCards/Card/Card'
 import { mapOrder } from '~/utils/sorts'
 import {
   DndContext,
-  MouseSensor,
-  TouchSensor,
+  // MouseSensor,
+  // TouchSensor,
   PointerSensor,
   useSensor,
   useSensors,
@@ -21,6 +21,8 @@ import {
   
 
 } from '@dnd-kit/core'
+import { MouseSensor , TouchSensor } from '~/customLibraries/DndKitSensors'
+
 import { arrayMove } from '@dnd-kit/sortable'
 import { cloneDeep, isEmpty} from 'lodash'
 import {generatePlaceholderCard} from '~/utils/formatters'
@@ -47,9 +49,22 @@ function BoardContent({ board }) {
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null)
   //điểm va chạm cuối cùng xử lí thuật toán phát hiện va chạm
   const lastOverId = useRef(null)
+  // useEffect(() => {
+  //   if (board?.columns?.length > 0 && board?.columnOrderIds?.length > 0) {
+  //     setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, '_id'))
+  //   } else {
+  //     setOrderedColumns([])
+  //   }
+  // }, [board])
+
   useEffect(() => {
-    if (board?.columns?.length > 0 && board?.columnOrderIds?.length > 0) {
-      setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, '_id'))
+    if (board?.columns?.length > 0) {
+      // Nếu columnOrderIds rỗng thì render theo dữ liệu mặc định từ API
+      if (board?.columnOrderIds?.length > 0) {
+        setOrderedColumns(mapOrder(board.columns, board.columnOrderIds, '_id'))
+      } else {
+        setOrderedColumns(board.columns)
+      }
     } else {
       setOrderedColumns([])
     }

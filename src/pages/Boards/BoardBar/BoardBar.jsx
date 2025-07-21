@@ -26,7 +26,7 @@ const MENUS_STYLE = {
 
 }
 
-function BoardBar({board}) {
+function BoardBar({ board }) {
   // const board = props.board
   // const{board} = props
 
@@ -48,12 +48,14 @@ function BoardBar({board}) {
       })}
     >
       <Box sx={{ display:'flex', alignItems: 'center', gap:2 }}>
-        <Chip 
-          sx={MENUS_STYLE}
-          icon={<DashboardIcon/>}
-          label={capitalizeFirstLetter(board?.title)}
-          clickable
-        />
+        <Tooltip title={board?.description}>
+          <Chip 
+            sx={MENUS_STYLE}
+            icon={<DashboardIcon/>}
+            label={capitalizeFirstLetter(board?.title)}
+            clickable
+          />
+        </Tooltip>
         <Chip 
           sx={MENUS_STYLE}
           icon={<VpnLockIcon/>}
