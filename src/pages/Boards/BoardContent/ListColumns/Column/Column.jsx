@@ -24,7 +24,7 @@ import {CSS} from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
-function Column({column}) {
+function Column({column,createNewCard}) {
 
   //code của phần useSortable và css
   const { attributes, listeners, setNodeRef, transform, transition,isDragging} = useSortable( {
@@ -67,12 +67,20 @@ function Column({column}) {
     
     const [newCardTitle, setNewCardTitle] = useState('')
   
-    const addNewCard = () => {
+    const addNewCard = async() => {
       if(!newCardTitle) {
         // console.error('hãy nhập Card title')
         toast.error('Please enter Cart title', {position: 'bottom-right'})
         return
       }
+      //vd 69
+      const newCardData = {
+        title:newCardTitle,
+        columnId : column._id
+      }
+      await createNewCard(newCardData)
+
+
       // console.log(newCardTitle);
       //đóng trạng thái thêm Card mới & clear Input
       toggleOpenNewCardForm()

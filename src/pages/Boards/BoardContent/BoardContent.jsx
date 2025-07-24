@@ -31,7 +31,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board }) {
+function BoardContent({ board ,createNewColumn,createNewCard}) {
   const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
   //yêu cầu chuột di chuyển 10px thì mới kích hoạt event,fix trường hợp click bị event
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
@@ -108,7 +108,7 @@ function BoardContent({ board }) {
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
         
         //Thêm placeholder Card nếu Column rỗng :bị kéo hết card đi ,không còn cái nào nữa (video 37.2)
-        if(isEmpty(nextActiveColumn.cards)){
+        if(isEmpty(nextActiveColumn.cards)) {
           nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
         }
         //xóa placeholder đi nếu card đang tồn tại(video 37.2)
@@ -292,27 +292,27 @@ function BoardContent({ board }) {
   }
   //args: arguments : các đối số ,tham số
   const collisionDetectionStrategy = useCallback((args)=> {
-    if(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN){
+    if(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
       return closestCorners({...args})
     }
 
     //tìm các điểm giao nhau va chạm -intersections với con trỏ
     const pointerInterSections = pointerWithin(args)
 
-    if(!pointerInterSections?.length){
+    if(!pointerInterSections?.length) {
       return
     }
     // thuật toán phát hiện va chạm sẽ trả về 1 mảng va chạm ở đây
     // const interSections = !!pointerInterSections?.length  ?pointerInterSection: rectIntersection(args)
     // //tìm over đầu tiên trong đám pointerInterSections ở trên
     let overId = getFirstCollision(pointerInterSections,'id')
-    if(overId){
+    if(overId) {
       //video 37: đoạn này để fix cái vụ flickering 
       //nếu cái over nó là column thì sẽ tới cái cardId gần nhất trong khu vực va chạm đó dựa vào
       //thuật toán phát hiện va chạm closestCenter hoặc closestCorners đều được 
 
       const checkColumn = orderedColumns.find(column => column.id === overId)
-      if(checkColumn){
+      if(checkColumn) {
         const filteredContainers = args.droppableContainers.filter(container => {
           return (container.id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))
         })
@@ -351,7 +351,12 @@ function BoardContent({ board }) {
           p: '10px 0'
         }}
       >
-        <ListColumns columns={orderedColumns} />
+        <ListColumns 
+          columns={orderedColumns} 
+          //vd: 69
+          createNewColumn = {createNewColumn}  
+          createNewCard = {createNewCard}
+        />
         <DragOverlay dropAnimation={customDropAnimation}>
           {(!activeDragItemType) && null}
           {(activeDragItemId && activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}

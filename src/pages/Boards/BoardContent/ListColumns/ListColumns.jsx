@@ -7,13 +7,13 @@ import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
-function ListColumns({columns}) {
+function ListColumns({columns,createNewColumn,createNewCard}) {
   const [openNewColumnForm , setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   
   const [newColumnTitle, setNewColumnTitle] = useState(' ')
 
-  const addNewColumn = () => {
+  const addNewColumn = async() => {
     if(!newColumnTitle) {
       // console.error('hãy nhập column title')
       toast.error('bị lỗi vui lòng nhập đầy đủ')
@@ -21,6 +21,17 @@ function ListColumns({columns}) {
     }
     // console.log(newColumnTitle);
     //đóng trạng thái thêm column mới & clear Input
+
+    //tạo dự liệu để gọi API(vd69)
+    const newColumnData = {
+      title: newColumnTitle
+    }
+    // Gọi lee props function .createNewColumn nằm ở compoment cao nhât(boards/_id.jsx)
+    // lưu ý : về sau ở học phần nâng cao học trực tiếp sẽ đưa dữ liệu Board ở ngoài Redux Global Store
+    // thì lúc này sẽ gọi luôn API ở đây thay vì gọi ngoài boards/_id rồi chuyển lần lượt vào
+    // việc sử dụng Redux (sắp học)thì code dẽ Cleean hơn
+
+    await createNewColumn(newColumnData)
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
 
@@ -39,7 +50,7 @@ function ListColumns({columns}) {
         }}
       >
         {/* Hiển thị danh sách columns */}
-        {columns?.map(column => <Column key = {column._id} column={column}/>)}
+        {columns?.map((column,index) => <Column key = {column?._id || `temp-col-${index}`} column={column} createNewCard={createNewCard}/>)}
         {/* nút thêm column */}
         {!openNewColumnForm
           ? <Box onClick ={toggleOpenNewColumnForm} sx={{
