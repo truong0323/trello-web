@@ -13,7 +13,7 @@ function ListColumns({columns,createNewColumn,createNewCard}) {
   
   const [newColumnTitle, setNewColumnTitle] = useState(' ')
 
-  const addNewColumn = async() => {
+  const addNewColumn = () => {
     if(!newColumnTitle) {
       // console.error('hãy nhập column title')
       toast.error('bị lỗi vui lòng nhập đầy đủ')
@@ -31,7 +31,7 @@ function ListColumns({columns,createNewColumn,createNewCard}) {
     // thì lúc này sẽ gọi luôn API ở đây thay vì gọi ngoài boards/_id rồi chuyển lần lượt vào
     // việc sử dụng Redux (sắp học)thì code dẽ Cleean hơn
 
-    await createNewColumn(newColumnData)
+    createNewColumn(newColumnData)
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
 

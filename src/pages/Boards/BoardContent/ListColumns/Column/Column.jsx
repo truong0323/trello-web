@@ -45,7 +45,8 @@ function Column({column,createNewCard}) {
     opacity: isDragging ? 0.5 : undefined //khi kéo thì sẽ mờ thằng được kéo
   }
   //code khi lấy biến từ list content
-  const orderedCards= mapOrder(column.cards,column.cardOrderIds, '_id')
+  //đây là biến đã cards đã được mapOrder ở board/_id.jsx(vd71)
+  const orderedCards= column.cards
 
   //code của dropdown menu
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -67,7 +68,7 @@ function Column({column,createNewCard}) {
     
     const [newCardTitle, setNewCardTitle] = useState('')
   
-    const addNewCard = async() => {
+    const addNewCard = () => {
       if(!newCardTitle) {
         // console.error('hãy nhập Card title')
         toast.error('Please enter Cart title', {position: 'bottom-right'})
@@ -78,7 +79,7 @@ function Column({column,createNewCard}) {
         title:newCardTitle,
         columnId : column._id
       }
-      await createNewCard(newCardData)
+      createNewCard(newCardData)
 
 
       // console.log(newCardTitle);
