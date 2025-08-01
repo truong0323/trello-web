@@ -14,14 +14,15 @@ import {
   createNewCardAPI,
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
-  moveCardToDifferentColumnAPI
+  moveCardToDifferentColumnAPI,
+  deleteColumnDetailsAPI
 
 } from '~/apis'
-import { Sledding } from '@mui/icons-material'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
 import { Box, Typography } from '@mui/material'
 
+import { toast } from 'react-toastify'
 function Board() {
   const [board , setBoard ] = useState(null)
   useEffect( () => {
@@ -165,6 +166,19 @@ function Board() {
           })
           //end: 73
   }
+  //Xử lí xóa 1 column và card bên trong nó 
+  const deleteColumnDetail = (columnId) => {
+    //update cho chuẩn dữ liệu state Board
+    const newBoard = { ...board }
+    newBoard.columns = newBoard.columns.filter(c => c._id !== columnId) 
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
+    setBoard(newBoard)
+    //xử lí dữ liệu phía backend
+    deleteColumnDetailsAPI(columnId).then(res => {
+      toast.success(res?.deleteResult)
+      // console.log('res-from deleteColumndetaiAPI: ',res);
+    })
+  }
 
   if( !board) {
     return (
@@ -194,6 +208,7 @@ function Board() {
             moveColumns = {moveColumns}
             moveCardInTheSameColumn={moveCardInTheSameColumn}
             moveCardToDifferentColumn = {moveCardToDifferentColumn}
+            deleteColumnDetail= {deleteColumnDetail}
           />
         </>
       
