@@ -174,6 +174,7 @@ function Board() {
     newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
     setBoard(newBoard)
     //xử lí dữ liệu phía backend
+    console.log(columnId);
     deleteColumnDetailsAPI(columnId).then(res => {
       toast.success(res?.deleteResult)
       // console.log('res-from deleteColumndetaiAPI: ',res);
