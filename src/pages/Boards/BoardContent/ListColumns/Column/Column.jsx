@@ -26,7 +26,12 @@ import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 //vd: 74
 import { useConfirm } from 'material-ui-confirm'
-function Column({column,createNewCard, deleteColumnDetail}) {
+import { createNewCardAPI, deleteColumnDetailsAPI } from '~/apis'
+import { cloneDeep } from 'lodash'
+import {  useDispatch, useSelector } from 'react-redux'
+import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+
+function Column({column}) {
 
   //code của phần useSortable và css
   const { attributes, listeners, setNodeRef, transform, transition,isDragging} = useSortable( {
@@ -65,12 +70,14 @@ function Column({column,createNewCard, deleteColumnDetail}) {
 
 
   //vd64
-  const [openNewCardForm , setOpenNewCardForm] = useState(false)
+    const [openNewCardForm , setOpenNewCardForm] = useState(false)
     const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
     
     const [newCardTitle, setNewCardTitle] = useState('')
-  
-    const addNewCard = () => {
+    const dispatch=useDispatch()
+    const board = useSelector(selectCurrentActiveBoard)
+
+    const addNewCard = async() => {
       if(!newCardTitle) {
         // console.error('hãy nhập Card title')
         toast.error('Please enter Cart title', {position: 'bottom-right'})
@@ -81,8 +88,33 @@ function Column({column,createNewCard, deleteColumnDetail}) {
         title:newCardTitle,
         columnId : column._id
       }
-      createNewCard(newCardData)
-
+      // Gọi Api tạo mới card và làm lại duwx liệu state Board
+      // createNewCard(newCardData)
+      const createdCard = await createNewCardAPI({
+            ...newCardData,
+            boardId: board._id,
+          })
+          
+          // console.log('created card: ',createdCard);
+          // const newBoard = { ...board }
+          const newBoard = cloneDeep(board)
+          const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+          if(columnToUpdate) {
+            //nếu column rỗng bản chất là đang chứa một cái placeholdercard (vd 37.2 ,hiện tại vd 69)
+            if(columnToUpdate.cards.some(card => card.Card)) {
+              columnToUpdate.cards = [createdCard]
+              columnToUpdate.cardOrderIds = [createdCard._id]
+            }
+            else {
+              columnToUpdate.cards.push(createdCard)
+              columnToUpdate.cardOrderIds.push(createdCard._id)
+            }
+            
+          }
+          console.log('columnToUpdate',columnToUpdate);
+      
+          // setBoard(newBoard)
+          dispatch(updateCurrentActiveBoard(newBoard))
 
       // console.log(newCardTitle);
       //đóng trạng thái thêm Card mới & clear Input
@@ -102,13 +134,21 @@ function Column({column,createNewCard, deleteColumnDetail}) {
         
         // description: 'Hành động này sẽ xóa vĩnh viễn column của bạn ,bạn chắc chưa!!',
         // confirmationKeyword: 'truong0323'
-        
       
       }).then(() => {
-        console.log('columnId :',column._id);
-        deleteColumnDetail(column._id)
-        
+      //update cho chuẩn dữ liệu state Board
+      // console.log('columnId :',column._id);
+      const newBoard = { ...board }
+      newBoard.columns = newBoard.columns.filter(c => c._id !== column._id) 
+      newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== column._id)
+      // setBoard(newBoard)
+      dispatch(updateCurrentActiveBoard(newBoard))
+      //xử lí dữ liệu phía backend
+      deleteColumnDetailsAPI(column._id).then(res => {
+        toast.success(res?.deleteResult)
+        // console.log('res-from deleteColumndetaiAPI: ',res);
       })
+    })
       .catch(() => {
         
       })
