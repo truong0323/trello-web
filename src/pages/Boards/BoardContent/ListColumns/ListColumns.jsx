@@ -7,13 +7,20 @@ import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
-function ListColumns({columns,createNewColumn,createNewCard ,deleteColumnDetail}) {
+import { generatePlaceholderCard } from '~/utils/formatters'
+import { createNewColumnAPI } from '~/apis'
+import { cloneDeep } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+
+function ListColumns({columns }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
   const [openNewColumnForm , setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
-  
   const [newColumnTitle, setNewColumnTitle] = useState(' ')
 
-  const addNewColumn = () => {
+  const addNewColumn = async() => {
     if(!newColumnTitle) {
       // console.error('hãy nhập column title')
       toast.error('bị lỗi vui lòng nhập đầy đủ')
@@ -26,12 +33,43 @@ function ListColumns({columns,createNewColumn,createNewCard ,deleteColumnDetail}
     const newColumnData = {
       title: newColumnTitle
     }
-    // Gọi lee props function .createNewColumn nằm ở compoment cao nhât(boards/_id.jsx)
-    // lưu ý : về sau ở học phần nâng cao học trực tiếp sẽ đưa dữ liệu Board ở ngoài Redux Global Store
-    // thì lúc này sẽ gọi luôn API ở đây thay vì gọi ngoài boards/_id rồi chuyển lần lượt vào
-    // việc sử dụng Redux (sắp học)thì code dẽ Cleean hơn
+    //Gọi APi tọa mới Column và làm lại dữ liệu State Board
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id
+    })
 
-    createNewColumn(newColumnData)
+      //vd 70 : cần xử lý vấn đề kéo thả với column rỗng (nhứo lại vd 37.2)
+
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+        
+    // console.log('created Colum: ',createdColumn);
+    //cập nhạt state board(vd69)
+    //phía front-end chúng ta phải tự làm đúng lại state databoard (thay vì phải gọi lại api fetchBoardDetailsAPI)
+    
+    // Đoạn này sẽ dính lỗi object is not extensible bở dù đã copy/clone ra giá trị newBoard nhưng bản chất của
+    // spread operator là Shallow Copy/Clone , nên dính phải rules Immutability trong Redux Toolkit 
+    // không dùng dùng được hàm Push (sửa giá trị trực tiếp của mảng) ,cách đơn giản nhanh trong th này là dùng tới 
+    // Deep Cpy/Clone toàn bộ cái Board cho dễ hiểu và code đơn giản
+    
+    // const newBoard = { ...board }
+    const newBoard = cloneDeep(board)
+    newBoard.columns.push(createdColumn)
+    newBoard.columnOrderIds.push(createdColumn._id)
+
+    //Cách số 2 là vẫn dùng array.concat thay thế cho push như docs của Redux Toolkit ở trên vì push như đã nói
+    // nó sẽ thay đổi giá trị mảng trực tiếp .còn thằng concat thì nó merge-ghép mảng lại và 
+    // tạo ra 1 mảng mới để chúng ta gán lại giá trị nên không vấn đề gì
+
+    // const newBoard = { ...board }
+    // newBoard.columns =  newBoard.columns.concat([createdColumn])
+    // newBoard.columnOrderIds = newBoard.columnOrderIds.concat([createdColumn._id])
+    // // setBoard(newBoard)
+    // console.log(board);
+
+    //cập  nhật dữ liệu board vào redux store
+    dispatch(updateCurrentActiveBoard(newBoard))
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
 
@@ -53,8 +91,6 @@ function ListColumns({columns,createNewColumn,createNewCard ,deleteColumnDetail}
         {columns?.map((column,index) => 
         <Column key = {column?._id || `temp-col-${index}`} 
         column={column} 
-        createNewCard={createNewCard}
-        deleteColumnDetail = {deleteColumnDetail}
         />)}
         {/* nút thêm column */}
         {!openNewColumnForm
