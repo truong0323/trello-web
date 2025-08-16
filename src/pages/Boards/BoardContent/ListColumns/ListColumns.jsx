@@ -159,6 +159,7 @@ function ListColumns({columns }) {
               gap:1
             }}>
               <Button
+                className='interceptor-loading'
                 onClick={addNewColumn}
                 variant="contained" color="success" size='small'
                 sx={{
@@ -169,11 +170,11 @@ function ListColumns({columns }) {
                 }}
               >Add column</Button>
               <CloseIcon
-                    fontSize='small'
-                    sx={{color: 'white' , cursor:'pointer'}}
+                fontSize='small'
+                sx={{color: 'white' , cursor:'pointer'}}
 
-                    onClick={toggleOpenNewColumnForm}
-                  />
+                onClick={toggleOpenNewColumnForm}
+              />
             </Box>
             
           </Box>
