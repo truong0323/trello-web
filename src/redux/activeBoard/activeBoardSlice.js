@@ -1,6 +1,6 @@
 import { createAsyncThunk,createSlice } from '@reduxjs/toolkit'
 //khởi tạo giá trị State của 1 cái slide trong redux
-import axios from 'axios'
+import authorizeAxiosInstance from '~/utils/authorizeAxios'
 import { isEmpty } from 'lodash'
 import { API_ROOT } from '~/utils/constants'
 import { generatePlaceholderCard } from '~/utils/formatters'
@@ -12,7 +12,7 @@ const initialState = {
 export const fetchBoardDetailsAPI = createAsyncThunk(
     'activeBoard/fetchBoardDetailsAPI',
     async (boardId) => {
-        const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
+        const response = await authorizeAxiosInstance.get(`${API_ROOT}/v1/boards/${boardId}`)
         //lưu ý : axios sẽ trả về kết quả qua property của nó là data
         return response.data
     }

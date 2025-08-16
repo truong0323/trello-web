@@ -24,21 +24,21 @@ import {
 }from '~/redux/activeBoard/activeBoardSlice'
 import {useDispatch, useSelector} from 'react-redux'
 
-
+import {useParams} from 'react-router-dom'
 function Board() {
   const dispatch = useDispatch()
   //không dung state của component nữa mà chuyển qua dùng state của redux
   // const [board , setBoard ] = useState(null)
   const board = useSelector(selectCurrentActiveBoard)
-  useEffect( () => {
-    //Tam thời fick cứng boardId chuẩn chỉnh về sau khi học nâng cao trực tiếp là sử dụng react-router-dom để lấy boardId từ URL
 
-    const boardId = '687a4e1419077f7ff489e057'
+  const { boardId } =  useParams()
+
+  useEffect( () => {
     //Call API
     dispatch(fetchBoardDetailsAPI(boardId))
     
     
-  }, [dispatch])
+  }, [dispatch,boardId])
   
   
   //vd:70 function này có nhiệm vụ gọi Api và xử lí khi kéo thả column xong xuôi
