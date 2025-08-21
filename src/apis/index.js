@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify'
 import authorizeAxiosInstance from '~/utils/authorizeAxios'
 import { API_ROOT } from '~/utils/constants'
 
@@ -44,4 +45,22 @@ export const deleteColumnDetailsAPI = async(columnId) => {
     //lưu ý : axios sẽ trả về kết quả qua property của nó là data
     return response.data
     
+}
+export const registerUserAPI = async (data) => {
+    const response = await authorizeAxiosInstance.post(`${API_ROOT}/v1/users/register`,data)
+    toast.success('Account created successfully ! Please check and verify your account before logging in!', {
+        theme: 'colored'
+    })
+    return response.data
+}
+export const verifyUserAPI = async (data) => {
+    const response = await authorizeAxiosInstance.put(`${API_ROOT}/v1/users/verify`,data)
+    toast.success('Account verified successfully !Now you can login to enjoy our services! Have a good day', {
+        theme: 'colored'
+    })
+    return response.data
+}
+export const refreshTokenAPI = async() => {
+    const response = await authorizeAxiosInstance.get(`${API_ROOT}/v1/users/refresh_token`)
+    return response.data
 }

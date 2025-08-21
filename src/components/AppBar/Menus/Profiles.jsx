@@ -12,6 +12,10 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
+import { useSelector,useDispatch } from 'react-redux'
+import { selectCurrentUser ,logoutUserAPI} from '~/redux/user/userSlice'
+import { useConfirm } from 'material-ui-confirm'
+
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -24,7 +28,21 @@ function Profiles() {
   const handleClose = () => {
     setAnchorEl(null)
   }
+  const dispatch = useDispatch()
+  const currentUser = useSelector(selectCurrentUser)
+  const confirmLogout =useConfirm()
 
+  const handleLoggout = () => {
+    confirmLogout({
+      title: 'Bạn có chắc chắn muốn đăng xuất không',
+      confirmationText: 'Đồng ý ',
+      cancellationText: 'Hủy'
+    }).then(() => {
+      //thực hiện gọi API logout
+      dispatch(logoutUserAPI())
+    }).catch(() => {})
+
+  }
   return (
     <Box>
       <Tooltip title="Account settings">
@@ -40,7 +58,7 @@ function Profiles() {
           <Avatar
             sx={{ width: 36, height: 36 }}
             alt="truong0323"
-            src="https://tse4.mm.bing.net/th/id/OIP.mAf5lulp0edjG9zvEsXKXQHaEN?pid=Api&P=0&h=180"
+            src= {currentUser?.avatar}
           />
         </IconButton>
       </Tooltip>
@@ -48,6 +66,7 @@ function Profiles() {
         id="basic-menu-profiles"
         anchorEl={anchorEl}
         open={open}
+        onClick={handleClose}
         onClose={handleClose}
         slotProps={{
           list: {
@@ -55,20 +74,18 @@ function Profiles() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleClose} sx={{ 
+          '&:hover' : {
+            color: 'success.light'
+          } 
+        }}>
           <ListItemIcon>
-            <Avatar sx={{ width: 28,mr:2, height: 28 }} />
+            <Avatar sx={{ width: 28,mr:2, height: 28 }} alt="Le manh truong" src={currentUser?.avatar}/>
           </ListItemIcon>
           Profile
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Avatar sx={{ width: 28,mr:2, height: 28 }} />
-          </ListItemIcon>
-          My account
-        </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem >
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
@@ -80,9 +97,14 @@ function Profiles() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleLoggout} sx={{
+          '&:hover' : {
+            color: 'warning.dark',
+            '& .loggout-icon': {color: 'warning.dark'}
+          } 
+        }}>
           <ListItemIcon>
-            <Logout fontSize="small" />
+            <Logout fontSize="small"  className='loggout-icon'/>
           </ListItemIcon>
           Logout
         </MenuItem>

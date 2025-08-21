@@ -1,9 +1,20 @@
 
 import NotFound from '~/pages/404/NotFound'
 import Board from '~/pages/Boards/_id'
-import {Routes, Route, Navigate } from 'react-router-dom'
+import {Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import Auth from './pages/Auth/Auth'
+import AccountVerification from './pages/Auth/AccountVerification'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from './redux/user/userSlice'
+
+const ProtectedRoute = ({ user}) => {
+  if(!user) return <Navigate to='/login' replace={ true}/>
+  return <Outlet/>
+  }
 function App() {
+  
+  const currentUser = useSelector(selectCurrentUser)
+
   return (
     <Routes>
       {/* {sau này sẽ thực hiện React Router Dom / boards/{board_id}} */}
@@ -15,12 +26,15 @@ function App() {
         <Navigate to="/boards/687a4e1419077f7ff489e057" replace={true}/>
       } />
 
-      {/* { Gọi đến Board details} */}
-      <Route path='/boards/:boardId' element ={<Board/> }/>
+      {/* Protected Routes (hiểu đơn giản trong dự án của chúng ta là những route chỉ cho truy cập sau khi đã login) */}
+      <Route element= {<ProtectedRoute user={currentUser} />}>
+        {/* { Gọi đến Board details} */}
+        <Route path='/boards/:boardId' element ={<Board/> }/>
+      </Route>
       {/* Authentication */}
       <Route path='/login' element={<Auth/> } />
       <Route path='/register' element={<Auth/> } />
-      
+      <Route path = '/accounnt/verification' element={ <AccountVerification/>} />
       {/* Route 404: not found */}
       <Route path ='*' element = {<NotFound/>}/>
     </Routes>
