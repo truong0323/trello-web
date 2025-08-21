@@ -15,22 +15,33 @@ import {store} from '~/redux/store'
 import { Provider } from 'react-redux'
 //cấu hình react-router-dom với BrowerRouter
 import {BrowserRouter } from 'react-router-dom'
+//cấu hình redux-persist
+import {PersistGate} from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
+const persistor = persistStore(store)
+
+//Kỹ thuật Inject Store: là kĩ thuật khi cần sử dụng biến redux store ở các file ngoài phạm vi component như file authorizeAxios.js
+import {injectStore} from '~/utils/authorizeAxios'
+injectStore(store)
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter basename='/'>
     <Provider store={store}>
-      <CssVarsProvider theme={theme}>
-        <ConfirmProvider defaultOptions={{
-          allowClose: false,
-          dialogProps: { maxWidth: 'xs' },
-          confirmationButtonProps: { color: 'secondary', variant: 'outlined' },
-          cancellationButtonProps: { color: 'inherit' },
-          buttonOrder: ['confirm', 'cancel']
-        }}>
-          <CssBaseline />
-          <App />
-          <ToastContainer position='bottom-left' theme='colored'/>
-        </ConfirmProvider>
-      </CssVarsProvider>
+      <PersistGate persistor={persistor}>
+        <CssVarsProvider theme={theme}>
+          <ConfirmProvider defaultOptions={{
+            allowClose: false,
+            dialogProps: { maxWidth: 'xs' },
+            confirmationButtonProps: { color: 'secondary', variant: 'outlined' },
+            cancellationButtonProps: { color: 'inherit' },
+            buttonOrder: ['confirm', 'cancel']
+          }}>
+            <CssBaseline />
+            <App />
+            <ToastContainer position='bottom-left' theme='colored'/>
+          </ConfirmProvider>
+        </CssVarsProvider>
+      </PersistGate>
     </Provider>
   </BrowserRouter>
 )
