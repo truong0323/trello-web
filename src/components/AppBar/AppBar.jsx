@@ -20,7 +20,8 @@ import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
-
+import { Link } from 'react-router-dom'
+import Notifications from './Notifications/Notifications'
 function AppBar() {
   const [searchValue , setSearchValue] = useState('')
   return (
@@ -41,12 +42,20 @@ function AppBar() {
       })}
     >
       <Box sx={{ display:'flex', alignItems: 'center', gap:2 }}>
-        <AppsIcon sx={{ color: 'white' }}/>
+        <Link to="/boards">
+          <Tooltip title= 'Danh sách các Boards'>
+            <AppsIcon sx={{ color: 'white', verticalAlign: 'middle' }}/>
+          </Tooltip>
+        </Link>
         <Box sx={{ display:'flex', alignItems: 'center', gap:0.5 }}>
-          <SvgIcon component={TrelloIcon} inheritViewBox sx={{ color:'white'}} />
-          <Typography variant="span" sx={{fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }} >
-            Trello
-          </Typography>
+          <Link to="/">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap:2 }}>
+              <SvgIcon component={TrelloIcon} inheritViewBox sx={{ color:'white'}} />
+              <Typography variant="span" sx={{fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }} >
+                Trello
+              </Typography>
+            </Box>
+          </Link>
           <Box sx={{ display:{ xs:'none', md: 'flex' }, gap:1}}>
             <Workspaces/>
             <Recent/>
@@ -108,12 +117,10 @@ function AppBar() {
             }
           }}
         />
+        {/* dark light System modes */}
         <ModeSelect />
-        <Tooltip title="Notification" >
-          <Badge color="warning" variant="dot" sx={{ cursor:'pointer' }}>
-            <NotificationsNoneIcon sx={{ color: 'white' }}/>
-          </Badge>
-        </Tooltip>
+        {/* xử lí hiển thị thông báo ở đây */}
+        <Notifications />
 
         <Tooltip title="help" >
           <HelpOutlineIcon sx={{ cursor:'pointer', color: 'white' }}/>

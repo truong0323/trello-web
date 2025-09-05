@@ -1,4 +1,5 @@
 import CssBaseline from '@mui/material/CssBaseline'
+import GlobalStyles from '@mui/material/GlobalStyles'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from '~/App.jsx'
@@ -22,12 +23,19 @@ const persistor = persistStore(store)
 
 //Kỹ thuật Inject Store: là kĩ thuật khi cần sử dụng biến redux store ở các file ngoài phạm vi component như file authorizeAxios.js
 import {injectStore} from '~/utils/authorizeAxios'
+
+
 injectStore(store)
 
+//cấu hình Socket-io client tại đây và export ra biến socketIoInstance
+import { io } from 'socket.io-client'
+import { API_ROOT } from './utils/constants'
+export const socketIoInstance = io(API_ROOT)
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter basename='/'>
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <BrowserRouter basename='/'>
         <CssVarsProvider theme={theme}>
           <ConfirmProvider defaultOptions={{
             allowClose: false,
@@ -36,13 +44,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             cancellationButtonProps: { color: 'inherit' },
             buttonOrder: ['confirm', 'cancel']
           }}>
+            <GlobalStyles styles = {{ a: { textDecoration: 'none' } }} />
             <CssBaseline />
             <App />
             <ToastContainer position='bottom-left' theme='colored'/>
           </ConfirmProvider>
         </CssVarsProvider>
-      </PersistGate>
-    </Provider>
-  </BrowserRouter>
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>
+  
 )
 

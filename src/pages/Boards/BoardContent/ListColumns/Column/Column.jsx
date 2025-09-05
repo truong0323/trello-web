@@ -26,10 +26,11 @@ import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 //vd: 74
 import { useConfirm } from 'material-ui-confirm'
-import { createNewCardAPI, deleteColumnDetailsAPI } from '~/apis'
+import { createNewCardAPI, deleteColumnDetailsAPI,updateColumnDetailsAPI } from '~/apis'
 import { cloneDeep } from 'lodash'
 import {  useDispatch, useSelector } from 'react-redux'
 import { selectCurrentActiveBoard, updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 
 function Column({column}) {
 
@@ -154,6 +155,21 @@ function Column({column}) {
       })
       
     }
+  const onUpdateColumnTitle = (newTitle) => {
+    //
+    console.log('new Title:' , newTitle);
+    // Gọi api update Column và xử lí dữ liệu board trong redux
+    updateColumnDetailsAPI(column._id, { title: newTitle }).then( () => {
+      const newBoard  = cloneDeep(board)
+      const columnToUpdate = newBoard.columns.find(c => column._id === c._id)
+      if (columnToUpdate) {
+        columnToUpdate.title = newTitle
+      }
+      // setBoard(newBoard)
+      dispatch(updateCurrentActiveBoard(newBoard))
+
+    })
+  }
 
 
   return (
@@ -187,7 +203,7 @@ function Column({column}) {
             justifyContent: 'space-between'
           }}
         >
-          <Typography
+          {/* <Typography
             variant="h6"
             sx={{
               fontSize: '1rem',
@@ -196,7 +212,12 @@ function Column({column}) {
             }}
           >
             {column?.title}
-          </Typography>
+          </Typography> */}
+          <ToggleFocusInput 
+            value = {column?.title}
+            onChangedValue={ onUpdateColumnTitle }
+            data-no-dnd = "true"
+          />
           <Box>
             <Tooltip title="More options">
               <ExpandMoreIcon
