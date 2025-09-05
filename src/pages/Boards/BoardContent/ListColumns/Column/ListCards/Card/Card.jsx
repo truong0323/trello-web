@@ -13,7 +13,12 @@ import {useSortable} from '@dnd-kit/sortable'
 import {CSS} from '@dnd-kit/utilities'
 import { Opacity } from '@mui/icons-material'
 
+import { useDispatch } from 'react-redux'
+import { showModalActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+
 function Card({ card }) {
+  const dispatch = useDispatch()
+
   const { attributes, listeners, setNodeRef, transform, transition,isDragging} = useSortable( {
       id: card._id,
       data: {...card}
@@ -30,8 +35,15 @@ function Card({ card }) {
   const shouldShowCardAction = ()=>{
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.AttachmentIcon?.length
   }
+  const setActiveCard = () => {
+    //cập nhật data cho activeCard trong Redux
+    dispatch(updateCurrentActiveCard(card))
+    //Hiện Modal activeCard lên
+    dispatch(showModalActiveCard())
+  }
   return (
     <MuiCard
+      onClick = {setActiveCard}
       ref={setNodeRef}
       style={dndKitCardStyles}
       {...attributes}

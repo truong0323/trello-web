@@ -11,6 +11,8 @@ import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 const MENUS_STYLE = {
   color: 'white',
   bgcolor:'transparent',
@@ -84,65 +86,11 @@ function BoardBar({ board }) {
           
       </Box>
       <Box sx={{ display:'flex', alignItems: 'center', gap:2 }}>
-        <Button 
-          variant="outlined" 
-          startIcon={ <PersonAddIcon/> }
-          sx={{color: 'white',
-            borderColor: 'white',
-            '&:hover':{borderColor: 'white'}
-          }}
-        >Invite
-        </Button>
-        <AvatarGroup max={7}
-        sx={{
-          gap:'10px',
-          '& .MuiAvatar-root': {
-            width: 34,
-            height: 34,
-            fontSize: '16px',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            '&: first-of-type':{
-              bgcolor:'#a4b0be'
-            }
-          }
-        }}
-        >
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          <Tooltip title="Lê Mạnh trường">
-            <Avatar alt="Trevor Henderson" 
-              src="/static/images/avatar/5.jpg" />
-          </Tooltip>
-          
-        </AvatarGroup>
+
+        {/* xử lí mời user vào làm thành viên của board */}
+        <InviteBoardUser boardId={ board._id}/>
+        {/* Xử lí hiển thị danh sách thành viên của board */}
+        <BoardUserGroup  boardUsers={board?.FE_allUsers}/>
       </Box>
     </Box>
   )

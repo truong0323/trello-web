@@ -31,6 +31,23 @@ export const activeBoardSlide = createSlice({
 
         //Update lại dữ liệu của currentActiveBoard
         state.currentActiveBoard = board
+        },
+        updateCardInBoard: (state,action) => {
+            //update nested data
+
+            const incomingCard = action.payload
+
+            //Tìm dần từ board -> column-> card
+            const column = state.currentActiveBoard.columns.find(i => i._id === incomingCard.columnId)
+            if(column) {
+                const card = column.cards.find(i => i._id === incomingCard._id)
+                if(card) {
+                    // card.title = incomingCard.title
+                    Object.keys(incomingCard).forEach(key => {
+                        card[key] = incomingCard[key]
+                    })
+                }
+            }
         }
     },
     //Nơi xử lí dữ liệu bất đồng bộ 
@@ -39,9 +56,13 @@ export const activeBoardSlide = createSlice({
             //action.payload ở đây là response.data trả về ở trên
             let board = action.payload
             // xử lí dữ liệu nếu cần thiết...
+            //Thành viên trong board sẽ là gộp lại của 2 mảng thành viên (2 mảng gọi api board details trả về)oweners và members
+            board.FE_allUsers = board.owners.concat(board.members)
+
+
+            //Sắp xếp lại thứ tự các column luôn ở đây trước khi đưa dữ liệu xuống bên dưới các component con(vd 71)
             board.columns = mapOrder(board.columns,board.columnOrderIds,'_id') 
-            
-            
+    
             board.columns.forEach(column => {
                 //vd 69 : khi f5 trang web cần xử lý vấn đề kéo thả với column rỗng (nhứo lại vd 37.2)
                 if (isEmpty(column.cards)) {
@@ -62,7 +83,7 @@ export const activeBoardSlide = createSlice({
 })
 //Actions: là nơi dành cho components bên dưới gọi bằng ispatch() tới nó để cập nhật lại dữ liệu thông qua reducer(chạy đồng bộ)
 /// để ý ở trên không thây properties đâu cả ,bởi vì những cái actions này đơn giản là thnawgf redux tạo tự động thheo tên của reducer
-export const { updateCurrentActiveBoard } = activeBoardSlide.actions
+export const { updateCurrentActiveBoard,updateCardInBoard } = activeBoardSlide.actions
 //selectors: là nơi dành cho các components bên dưới gọi bằn hook useSelector() để lấy dữ liệu từ trong kho redux store ra sử dụng
 export const selectCurrentActiveBoard = (state) => {
     return state.activeBoard.currentActiveBoard
